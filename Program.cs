@@ -1,66 +1,52 @@
-﻿Console.WriteLine("Choose conversion:");
-Console.WriteLine("1 - Decimal to base");
-Console.WriteLine("2 - Base to decimal");
+﻿string[] input = Console.ReadLine().Split(' ');
+List<double> data = new List<double>();
 
-int choice = int.Parse(Console.ReadLine());
-
-if (choice == 1)
+for (int i = 0; i < input.Length; i++)
 {
-    Console.Write("Enter decimal number: ");
-    int decNum = int.Parse(Console.ReadLine());
-
-    Console.Write("Enter base (2 - 16): ");
-    int toBase = int.Parse(Console.ReadLine());
-
-    string converted = DecimalToBase(decNum, toBase);
-    Console.WriteLine("Result: " + converted);
+    data.Add(double.Parse(input[i]));
 }
-else if (choice == 2)
+
+double sum = 0;
+for (int i = 0; i < data.Count; i++)
 {
-    Console.Write("Enter number: ");
-    string num = Console.ReadLine().ToUpper();
+    sum += data[i];
+}
+double average = sum / data.Count;
 
-    Console.Write("Enter base (2 - 16): ");
-    int fromBase = int.Parse(Console.ReadLine());
+data.Sort();
+int n = data.Count;
+double median;
 
-    int decResult = BaseToDecimal(num, fromBase);
-    Console.WriteLine("Decimal result: " + decResult);
+if (n % 2 == 0)
+{
+    median = (data[n / 2 - 1] + data[n / 2]) / 2;
 }
 else
 {
-    Console.WriteLine("Invalid choice!");
+    median = data[n / 2];
 }
 
-static string DecimalToBase(int number, int baseTo)
+double mode = data[0];
+int maxCount = 1;
+
+for (int i = 0; i < data.Count; i++)
 {
-    if (number == 0)
-        return "0";
-
-    string digits = "0123456789ABCDEF";
-    string result = "";
-
-    while (number > 0)
+    int count = 0;
+    for (int j = 0; j < data.Count; j++)
     {
-        int remainder = number % baseTo;
-        result = digits[remainder] + result;
-        number /= baseTo;
+        if (data[i] == data[j])
+        {
+            count++;
+        }
     }
 
-    return result;
-}
-
-static int BaseToDecimal(string number, int baseFrom)
-{
-    string digits = "0123456789ABCDEF";
-    int result = 0;
-    int power = 1;
-
-    for (int i = number.Length - 1; i >= 0; i--)
+    if (count > maxCount)
     {
-        int digitValue = digits.IndexOf(number[i]);
-        result += digitValue * power;
-        power *= baseFrom;
+        maxCount = count;
+        mode = data[i];
     }
-
-    return result;
 }
+
+Console.WriteLine("Average: " + average);
+Console.WriteLine("Median: " + median);
+Console.WriteLine("Mode: " + mode);
